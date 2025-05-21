@@ -105,7 +105,7 @@ def make_masks():
     mask_B = mask_matrix_to_video(mask2d_B)
     mask_C = mask_matrix_to_video(mask2d_C)
 
-    rp.display_image(rp.tiled_images([mask2d_A,mask2d_B,mask2d_C],length=3))
+    # rp.display_image(rp.tiled_images([mask2d_A,mask2d_B,mask2d_C],length=3))
 
 @rp.globalize_locals
 def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora borealis",name='untitled'):
@@ -153,3 +153,6 @@ def main():
     for raw_video_path, prompt, name in zip(raw_video_paths, prompts, names):
         run(raw_video_path, prompt, name)
 
+
+if __name__=='__main__':
+    main()
