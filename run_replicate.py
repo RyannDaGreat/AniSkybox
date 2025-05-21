@@ -1,6 +1,9 @@
-import rp
+import os
+
 import numpy as np
 import replicate
+import rp
+
 
 @rp.globalize_locals
 def run_vace_via_replicate(video, mask, prompt="", name=""):
@@ -108,7 +111,7 @@ def make_masks():
 def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora borealis",name='untitled'):
     #Sign in to replicate
     api_key = rp.base64_to_object('eJxrYJmqwwABPRpFFvHBFkFZKf7eBgbOFlFBBT5pvl5RAek+yWFGoemRFuFlhl7OLgGBU/QAgOAPTw==')
-    rp.os.environ['REPLICATE_API_TOKEN']=api_key
+    os.environ['REPLICATE_API_TOKEN']=api_key
 
     # Sync these with run_vace_via_replicate's input
     T = 81
@@ -122,6 +125,8 @@ def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora bor
     raw_video = rp.resize_images(raw_video, size=(H, W))
 
     with rp.SetCurrentDirectoryTemporarily(rp.make_directory('outputs')):
+        rp.save_video_mp4(raw_video, f'{name}_raw.mp4', video_bitrate="max", framerate=20)
+
         in_A  = shift_video(raw_video, dx=1/2, dt=1/2)
         out_A = run_vace_via_replicate(in_A, mask_A, prompt, f"{name}_A")
 
@@ -133,15 +138,16 @@ def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora bor
 
         out_D = shift_video(out_C, dt=-1 / 2)
 
-        out_path = rp.get_unique_copy_path(f'{name}.mp4')
+        out_path = rp.get_unique_copy_path(f'{name}_seamless.mp4')
 
         rp.save_video_mp4(out_D, out_path, video_bitrate="max", framerate=20)
 
         return out_path
 
-@globalize_locals
+@rp.globalize_locals
 def main():
-    from selected_videos import pano_vids as raw_video_paths, captions as prompts, videoids as names
+    from selected_videos import captions as prompts
+    from selected_videos import pano_vids as raw_video_paths
 
-    for raw_video_path, prompt, name in zip(raw_video_paths, prompts, names):
-        run(raw_video_path, prompt, name)
+    for raw_video_path, prompt in zip(raw_video_paths, prompts):
+         run(raw_video_path, prompt)
