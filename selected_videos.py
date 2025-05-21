@@ -56,9 +56,8 @@ pano_vids = [
 
 csv = pd.read_csv("WEB360/WEB360_360TF_train.csv")
 id_to_caption = {videoid: name for videoid, name in zip(csv.videoid, csv.name)}
-captions = [
-    id_to_caption[int(rp.get_file_name(file, include_file_extension=False))]
-    for file in pano_vids
-]
+videoids = [rp.get_file_name(file, include_file_extension=False) for file in pano_vids]
+
+captions = [id_to_caption[int(videoid)] for videoid in videoids]
 
 pano_vids, captions = rp.sync_shuffled(pano_vids, captions)

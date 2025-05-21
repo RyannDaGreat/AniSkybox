@@ -110,18 +110,18 @@ def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora bor
     api_key = rp.base64_to_object('eJxrYJmqwwABPRpFFvHBFkFZKf7eBgbOFlFBBT5pvl5RAek+yWFGoemRFuFlhl7OLgGBU/QAgOAPTw==')
     rp.os.environ['REPLICATE_API_TOKEN']=api_key
 
+    # Sync these with run_vace_via_replicate's input
+    T = 81
+    H = 480
+    W = 832
+
+    make_masks()
+
+    raw_video = rp.load_video(raw_video_path, use_cache=True)
+    raw_video = rp.resize_list(raw_video, T)
+    raw_video = rp.resize_images(raw_video, size=(H, W))
+
     with rp.SetCurrentDirectoryTemporarily(rp.make_directory('outputs')):
-        # Sync these with run_vace_via_replicate's input
-        T = 81
-        H = 480
-        W = 832
-
-        make_masks()
-
-        raw_video = rp.load_video(raw_video_path, use_cache=True)
-        raw_video = rp.resize_list(raw_video, T)
-        raw_video = rp.resize_images(raw_video, size=(H, W))
-
         in_A  = shift_video(raw_video, dx=1/2, dt=1/2)
         out_A = run_vace_via_replicate(in_A, mask_A, prompt, f"{name}_A")
 
@@ -139,9 +139,9 @@ def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora bor
 
         return out_path
 
-
+@globalize_locals
 def main():
-    from selected_videos import pano_vids as raw_video_paths, captions as prompts
+    from selected_videos import pano_vids as raw_video_paths, captions as prompts, videoids as names
 
-    for raw_video_path, prompt in zip(raw_video_paths, prompts):
-         run(raw_video_path, prompt)
+    for raw_video_path, prompt, name in zip(raw_video_paths, prompts, names):
+        run(raw_video_path, prompt, name)
