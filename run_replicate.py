@@ -35,7 +35,7 @@ def run_vace_via_replicate(video, mask, prompt="", name=""):
             "src_video": open(masked_video_path, "rb"),
             "speed_mode": "Extra Juiced 🚀 (even more speed)",
             "sample_shift": 16,
-            "sample_steps": 30,
+            "sample_steps": 50,
             "sample_solver": "unipc",
             "sample_guide_scale": 5,
         },
