@@ -60,4 +60,4 @@ videoids = [rp.get_file_name(file, include_file_extension=False) for file in pan
 
 captions = [id_to_caption[int(videoid)] for videoid in videoids]
 
-pano_vids, captions = rp.sync_shuffled(pano_vids, captions)
+pano_vids, captions, videoids = rp.sync_shuffled(pano_vids, captions, videoids)

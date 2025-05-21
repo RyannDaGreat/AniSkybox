@@ -148,6 +148,8 @@ def run(raw_video_path="/Users/ryan/Downloads/Aurora.mp4",prompt="The aurora bor
 def main():
     from selected_videos import captions as prompts
     from selected_videos import pano_vids as raw_video_paths
+    from selected_videos import videoids as names
 
-    for raw_video_path, prompt in zip(raw_video_paths, prompts):
-         run(raw_video_path, prompt)
+    for raw_video_path, prompt, name in zip(raw_video_paths, prompts, names):
+        run(raw_video_path, prompt, name)
+
